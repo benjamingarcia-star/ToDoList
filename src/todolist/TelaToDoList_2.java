@@ -60,6 +60,7 @@ public class TelaToDoList_2 extends javax.swing.JFrame {
         jButtonAdicionarTarefa.addActionListener(this::jButtonAdicionarTarefaActionPerformed);
 
         jComboBoxFitroStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos", "Concluído", "Não Concluído" }));
+        jComboBoxFitroStatus.addItemListener(this::jComboBoxFitroStatusItemStateChanged);
         jComboBoxFitroStatus.addActionListener(this::jComboBoxFitroStatusActionPerformed);
 
         jTableTarefas.setModel(new javax.swing.table.DefaultTableModel(
@@ -76,6 +77,7 @@ public class TelaToDoList_2 extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTableTarefas);
 
         jButtonConcluirTarefa.setText("Concluir");
+        jButtonConcluirTarefa.addActionListener(this::jButtonConcluirTarefaActionPerformed);
 
         jButtonRemoverTarefa.setText("Remover");
         jButtonRemoverTarefa.addActionListener(this::jButtonRemoverTarefaActionPerformed);
@@ -205,6 +207,33 @@ public class TelaToDoList_2 extends javax.swing.JFrame {
 
         jTextFieldDescricaoTarefa.setText("");
     }//GEN-LAST:event_jButtonAdicionarTarefaActionPerformed
+
+    private void jButtonConcluirTarefaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConcluirTarefaActionPerformed
+        int linhaSelecinada = jTableTarefas.getSelectedRow();
+        
+        if(linhaSelecinada < 0){
+            JOptionPane.showMessageDialog(null, "Nenhuma tarefa selecioanada...");
+            return;
+        }
+        
+        String tarefaSelecionada = recuperarTarefa(linhaSelecinada);
+        
+        int indiceTarefaSelecionada = tarefas.indexOf(tarefaSelecionada);
+        
+        String[] dados = tarefas.get(indiceTarefaSelecionada).split(";");
+        
+        tarefas.set(indiceTarefaSelecionada, dados[0] + ";" + CONCLUIDA);
+        
+        filtrarTabela();
+        
+        preencherTabela();
+    }//GEN-LAST:event_jButtonConcluirTarefaActionPerformed
+
+    private void jComboBoxFitroStatusItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxFitroStatusItemStateChanged
+        filtrarTabela();
+        
+        preencherTabela();
+    }//GEN-LAST:event_jComboBoxFitroStatusItemStateChanged
 
     public boolean hasTarefaRepetida(String novaTarefa) {
         for (String tarefa : tarefas) {
